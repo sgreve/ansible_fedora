@@ -76,7 +76,7 @@
     - name: Clone dotfiles
       become_user: "{{ ansible_user_id }}"
       ansible.builtin.git:
-        repo: 'htts://github.com/sgreve/dotfiles'
+        repo: 'https://github.com/sgreve/dotfiles'
         dest: '$HOME/dotfiles'
         update: false
 

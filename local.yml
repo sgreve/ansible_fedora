@@ -36,10 +36,14 @@
     - name: Enable google-chrome repository
       ansible.builtin.shell: >
         dnf config-manager --set-enabled google-chrome
+      args:
+        creates: '/etc/yum.repos.d/google-chrome.repo'
 
     - name: Add docker repository
       ansible.builtin.shell: >
         dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+      args:
+        creates: '/etc/yum.repos.d/docker-ce.repo'
 
     - name: Install packages
       ansible.builtin.dnf:
@@ -68,3 +72,24 @@
         executable: /bin/bash
         chdir: "$HOME"
         creates: "$HOME/.nvm/nvm.sh"
+
+    - name: Clone dotfiles
+      become_user: "{{ ansible_user_id }}"
+      ansible.builtin.git:
+        repo: 'htts://github.com/sgreve/dotfiles'
+        dest: '$HOME/dotfiles'
+        update: false
+
+    - name: Link .zshrc
+      become_user: "{{ ansible_user_id }}"
+      ansible.builtin.file:
+        src: /home/{{ ansible_user_id }}/dotfiles/.zshrc
+        dest: /home/{{ ansible_user_id }}/.zshrc
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        state: link
+
+    - name: Change default shell to zsh
+      ansible.builtin.user:
+        user: "{{ ansible_user_id }}"
+        shell: /bin/zsh

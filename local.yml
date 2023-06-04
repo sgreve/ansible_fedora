@@ -65,7 +65,7 @@
           - exa
 
     - name: Install nvm
-      become_user: "{{ ansible_user_id }}"
+      become_user: svengreve
       ansible.builtin.shell: >
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
       args:
@@ -74,21 +74,21 @@
         creates: "$HOME/.nvm/nvm.sh"
 
     - name: Clone dotfiles
-      become_user: "{{ ansible_user_id }}"
+      become_user: svengreve
       ansible.builtin.git:
         repo: 'https://github.com/sgreve/dotfiles'
         dest: '$HOME/dotfiles'
 
     - name: Link .zshrc
-      become_user: "{{ ansible_user_id }}"
+      become_user: svengreve
       ansible.builtin.file:
         src: /home/{{ ansible_user_id }}/dotfiles/.zshrc
         dest: /home/{{ ansible_user_id }}/.zshrc
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_id }}"
+        owner: svengreve
+        group: svengreve
         state: link
 
     - name: Change default shell to zsh
       ansible.builtin.user:
-        user: "{{ ansible_user_id }}"
+        user: svengreve
         shell: /bin/zsh

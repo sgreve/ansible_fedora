@@ -78,7 +78,6 @@
       ansible.builtin.git:
         repo: 'https://github.com/sgreve/dotfiles'
         dest: '$HOME/dotfiles'
-        update: false
 
     - name: Link .zshrc
       become_user: "{{ ansible_user_id }}"

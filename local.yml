@@ -1,0 +1,69 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Add Microsoft Key
+      ansible.builtin.rpm_key:
+        state: present
+        key: 'https://packages.microsoft.com/keys/microsoft.asc'
+
+    - name: Add VS Code Repo
+      ansible.builtin.yum_repository:
+        name: code
+        description: Visual Studio Code repo
+        file: vscode
+        baseurl: 'https://packages.microsoft.com/yumrepos/vscode'
+        gpgkey: 'https://packages.microsoft.com/keys/microsoft.asc'
+        gpgcheck: 'yes'
+
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        update_cache: true
+        name: "*"
+        update_only: true
+
+    - name: Install repos and plugins
+      ansible.builtin.dnf:
+        state: present
+        name:
+          - fedora-workstation-repositories
+          - dnf-plugins-core
+
+    - name: Enable google-chrome repository
+      ansible.builtin.shell: >
+        dnf config-manager --set-enabled google-chrome
+
+    - name: Add docker repository
+      ansible.builtin.shell: >
+        dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+
+    - name: Install packages
+      ansible.builtin.dnf:
+        update_cache: true
+        state: present
+        name:
+          - code
+          - zsh
+          - neovim
+          - python3-neovim
+          - alacritty
+          - git
+          - google-chrome-stable
+          - firefox
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+
+    - name: Install nvm
+      become_user: "{{ ansible_user_id }}"
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"

@@ -82,8 +82,8 @@
     - name: Link .zshrc
       become_user: "{{ ansible_user_id }}"
       ansible.builtin.file:
-        src: /home/{{ ansible_user_id }}/.zshrc
-        dest: /home/{{ ansible_user_id }}/dotfiles/.zshrc
+        src: /home/{{ ansible_user_id }}/dotfiles/.zshrc
+        dest: /home/{{ ansible_user_id }}/.zshrc
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_id }}"
         state: link

@@ -63,6 +63,7 @@
           - docker-buildx-plugin
           - docker-compose-plugin
           - exa
+          - gnome-tweaks
 
     - name: Install nvm
       become_user: svengreve

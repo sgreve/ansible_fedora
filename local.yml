@@ -64,6 +64,8 @@
           - docker-compose-plugin
           - exa
           - gnome-tweaks
+          - rust
+          - cargo
 
     - name: Install nvm
       become_user: svengreve
